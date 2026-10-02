@@ -1,0 +1,29 @@
+.yoo-load-more {
+    clear: both;
+    margin-top: 30px;
+}
+
+.yoo-load-more__sentinel {
+    display: block;
+    height: 1px;
+    width: 100%;
+}
+
+.yoo-load-more__status:empty {
+    display: none;
+}
+
+.yoo-load-more__status:not(:empty) {
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.yoo-load-more [data-yoo-load-more-spinner] {
+    margin-right: 0.45em;
+    vertical-align: middle;
+}
+
+.yoo-load-more[data-mode="infinite"] [data-yoo-load-more-button] {
+    display: none;
+}
+

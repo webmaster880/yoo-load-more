@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "yoo-load-more/load-more",
+    "version": "1.0.0",
+    "title": "Dynamic Load More",
+    "category": "widgets",
+    "icon": "update",
+    "description": "Adds Load More or Infinite Scroll to the preceding Query Loop block.",
+    "textdomain": "yoo-load-more",
+    "attributes": {
+        "mode": { "type": "string", "default": "button" },
+        "targetSelector": { "type": "string", "default": ".wp-block-query .wp-block-post-template" },
+        "itemSelector": { "type": "string", "default": ":scope > li" },
+        "paginationSelector": { "type": "string", "default": ".wp-block-query-pagination" },
+        "nextSelector": { "type": "string", "default": ".wp-block-query-pagination-next, a[rel=\"next\"]" },
+        "defaultText": { "type": "string", "default": "Load more" },
+        "loadingText": { "type": "string", "default": "Loading…" },
+        "noMoreText": { "type": "string", "default": "No more posts" },
+        "buttonStyle": { "type": "string", "default": "uk-button-default" },
+        "buttonSize": { "type": "string", "default": "" },
+        "rootMargin": { "type": "string", "default": "300px 0px" },
+        "debounce": { "type": "number", "default": 200 },
+        "updateBrowserUrl": { "type": "boolean", "default": false },
+        "hidePagination": { "type": "boolean", "default": true },
+        "initialUrl": { "type": "string", "default": "" }
+    },
+    "supports": {
+        "html": false,
+        "align": ["left", "center", "right", "wide"]
+    },
+    "editorScript": "yoo-load-more-block-editor",
+    "viewScript": "yoo-load-more-engine",
+    "style": "yoo-load-more"
+}
+

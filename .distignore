@@ -1,0 +1,13 @@
+.git
+.github
+.gitignore
+.distignore
+.DS_Store
+.idea
+.vscode
+node_modules
+vendor
+bin
+build.sh
+*.zip
+*.log
