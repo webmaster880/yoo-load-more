@@ -4,7 +4,18 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- Added broader Next-link discovery for WordPress and UIkit pagination markup.
+- Added a safe numbered-pagination fallback when no explicit Next link exists.
+- Added the `X-YOO-LoadMore` diagnostic request header.
+- Added `YooLoadMore.Instance` and `YooLoadMore.getInstance()` to the public JavaScript API.
+- Added the `yoo:loadmore:loaded` compatibility event for analytics integrations.
+
+### Fixed
+
+- Clear a previous request error when the visitor retries loading.
+- Emit prefixed console diagnostics while preserving the accessible error status.
 
 ## [1.0.0] - 2026-10-02
 

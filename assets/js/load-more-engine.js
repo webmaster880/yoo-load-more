@@ -54,7 +54,7 @@
                 targetSelector: '.uk-grid',
                 itemSelector: ':scope > *',
                 paginationSelector: '.uk-pagination',
-                nextSelector: 'a[rel="next"], .uk-pagination-next a',
+                nextSelector: 'a[rel="next"], a.next, .next.page-numbers, .uk-pagination-next a',
                 defaultText: 'Load more',
                 loadingText: 'Loading…',
                 noMoreText: 'No more posts',
@@ -247,6 +247,15 @@
                 link = link.closest('a') || link.querySelector('a');
             }
 
+            // Some UIkit pagination templates only render numbered links. In that
+            // case, the list item immediately after the active page is the next page.
+            if (!link && pagination) {
+                const numericNext = pagination.querySelector('li.uk-active + li a, li.active + li a, [aria-current="page"] + a');
+                if (numericNext) {
+                    link = numericNext;
+                }
+            }
+
             if (!link && doc.head) {
                 link = doc.head.querySelector('link[rel="next"]');
             }
@@ -317,6 +326,7 @@
             }
 
             this.seenUrls.add(normalizedUrl);
+            this.clearError();
             this.setLoading(true);
             this.abortController = new AbortController();
 
@@ -324,7 +334,10 @@
                 const response = await fetch(normalizedUrl, {
                     method: 'GET',
                     credentials: 'same-origin',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-YOO-LoadMore': '1',
+                    },
                     signal: this.abortController.signal,
                 });
 
@@ -373,6 +386,7 @@
                     url: response.url || normalizedUrl,
                     nextUrl: this.nextUrl,
                 });
+                this.emitCompatibilityEvent(insertedItems, response.url || normalizedUrl);
 
                 if (!this.nextUrl || this.seenUrls.has(new URL(this.nextUrl, window.location.href).href)) {
                     this.finish();
@@ -479,7 +493,27 @@
             const fallback = window.YooLoadMoreSettings && window.YooLoadMoreSettings.errorText;
             this.status.textContent = fallback || 'Unable to load more posts. Please try again.';
             this.root.classList.add('yoo-load-more--error');
+            console.error('[YOO Load More]', error);
             this.emit('error', { error });
+        }
+
+        clearError() {
+            this.root.classList.remove('yoo-load-more--error');
+            if (!this.complete) {
+                this.status.textContent = '';
+            }
+        }
+
+        emitCompatibilityEvent(items, url) {
+            this.root.dispatchEvent(new CustomEvent('yoo:loadmore:loaded', {
+                bubbles: true,
+                detail: {
+                    instance: this,
+                    items,
+                    url,
+                    nextUrl: this.nextUrl,
+                },
+            }));
         }
 
         emit(name, detail, cancelable = false) {
@@ -523,5 +557,10 @@
     }).observe(document.documentElement, { childList: true, subtree: true });
 
     document.addEventListener('yoo-load-more:init', (event) => init(event.detail && event.detail.scope || document));
-    window.YooLoadMore = { init, instances };
+    window.YooLoadMore = {
+        init,
+        instances,
+        Instance: YooLoadMore,
+        getInstance: (element) => instances.get(element),
+    };
 })();

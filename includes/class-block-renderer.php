@@ -23,7 +23,7 @@ final class Block_Renderer
             'targetSelector' => '.wp-block-query .wp-block-post-template',
             'itemSelector' => ':scope > li',
             'paginationSelector' => '.wp-block-query-pagination',
-            'nextSelector' => '.wp-block-query-pagination-next, a[rel="next"]',
+            'nextSelector' => '.wp-block-query-pagination-next, a[rel="next"], a.next, .next.page-numbers',
             'defaultText' => __('Load more', 'yoo-load-more'),
             'loadingText' => __('Loading…', 'yoo-load-more'),
             'noMoreText' => __('No more posts', 'yoo-load-more'),
@@ -92,4 +92,3 @@ final class Block_Renderer
         return $html;
     }
 }
-

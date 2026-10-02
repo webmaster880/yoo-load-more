@@ -58,8 +58,18 @@ All events bubble from the control element:
 - `yoo-load-more:complete` — no next page remains.
 - `yoo-load-more:error` — includes the caught `error`.
 - `yoo-load-more:uikiterror` — insertion succeeded but a UIkit refresh failed.
+- `yoo:loadmore:loaded` — compatibility event for existing analytics integrations; includes the instance, inserted items, loaded URL, and next URL.
 
 After insertion the engine runs `UIkit.update()` on the target, reapplies a surrounding UIkit Filter, and refreshes Scrollspy and Lightbox roots when present.
+
+The programmatic API is available as `window.YooLoadMore`:
+
+```js
+YooLoadMore.init(document);
+
+const control = document.querySelector('[data-yoo-load-more]');
+const instance = YooLoadMore.getInstance(control);
+```
 
 ## Optional direct markup
 

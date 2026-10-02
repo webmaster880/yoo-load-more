@@ -13,7 +13,7 @@ return [
         'target_selector' => '.uk-grid',
         'item_selector' => ':scope > *',
         'pagination_selector' => '.uk-pagination',
-        'next_selector' => 'a[rel="next"], .uk-pagination-next a',
+        'next_selector' => 'a[rel="next"], a.next, .next.page-numbers, .uk-pagination-next a',
         'default_text' => 'Load more',
         'loading_text' => 'Loading…',
         'no_more_text' => 'No more posts',
