@@ -100,6 +100,22 @@ for command_name in php node rsync zip unzip mktemp; do
     fi
 done
 
+if [ "$PUBLISH_RELEASE" -eq 1 ] && [ -z "$BUMP_TYPE" ]; then
+    echo "❌ --publish-release requires patch, minor, or major."
+    exit 1
+fi
+
+if [ -n "$BUMP_TYPE" ]; then
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "❌ A version bump requires an initialized Git repository."
+        exit 1
+    fi
+    if ! git remote get-url origin >/dev/null 2>&1; then
+        echo "❌ A version bump requires a configured GitHub remote named origin."
+        exit 1
+    fi
+fi
+
 if [ -n "$BUMP_TYPE" ]; then
     echo "⬆️ Bumping ${BUMP_TYPE} version..."
     php bin/bump-version.php "$BUMP_TYPE"
@@ -122,15 +138,6 @@ node --check assets/js/block-editor.js
 php bin/check-version.php "$VERSION"
 
 if [ -n "$BUMP_TYPE" ]; then
-    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-        echo "❌ A version bump requires an initialized Git repository."
-        exit 1
-    fi
-    if ! git remote get-url origin >/dev/null 2>&1; then
-        echo "❌ A version bump requires a configured GitHub remote named origin."
-        exit 1
-    fi
-
     git add -A
     if ! git diff --cached --quiet; then
         release_message="Release v${VERSION}"
@@ -191,10 +198,6 @@ mv -f "$TEMP_ZIP" "$RELEASE_DIR/$ZIP_NAME"
 echo "✅ Archive created: ${RELEASE_DIR}/${ZIP_NAME}"
 
 if [ "$PUBLISH_RELEASE" -eq 1 ]; then
-    if [ -z "$BUMP_TYPE" ]; then
-        echo "❌ --publish-release requires patch, minor, or major."
-        exit 1
-    fi
     if ! command -v gh >/dev/null 2>&1; then
         echo "❌ GitHub CLI (gh) is not installed."
         exit 1
